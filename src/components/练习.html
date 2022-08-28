@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<style>
+		.div1{
+			height: 100px;
+			width: 100px;
+			position: absolute;
+			background-color: red;
+		}
+	</style>
+	<body>
+		<div class="div1"></div>
+		<script>
+            //定义一个原型构造函数
+		function Drag (selector){
+			this.elem = document.querySelector(selector)
+			this.disX=0
+			this.disY=0
+			this.init()
+		}
+        //将函数 挂在到原型上
+		Drag.prototype.init=function(){
+            //将this存好
+			let ctx = this
+			ctx.elem.onmousedown = function(ev){
+                //获取当前元素的xy轴
+				ctx.down(ev)
+				document.onmousemove = function(ev){
+					ctx.move(ev)
+				}
+				document.onmouseup = function(){
+					ctx.up()
+				}
+				ev.preventDefault()
+			}
+		};
+		Drag.prototype.down=function(ev){
+			let ctx = this
+            console.log(ev)
+			ctx.disX= ev.pageX - ctx.elem.offsetLeft
+			ctx.disY = ev.pageY -ctx.elem.offsetTop
+		}
+		Drag.prototype.move=function(ev){
+			let ctx = this
+            //实例现在的偏移
+			ctx.elem.style.left = ev.pageX - ctx.disX +'px'
+			ctx.elem.style.top = ev.pageY - ctx.disY +'px'
+		}
+		Drag.prototype.up = function(){
+			document.onmousemove =null
+		}
+        //创建一个新的例 触发构造函数 
+		new	Drag('.div1')
+		</script>
+	</body>
+</html>
